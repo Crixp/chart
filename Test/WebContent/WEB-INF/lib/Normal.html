@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+.grid .tick {
+	stroke: lightgrey;
+	stroke-opacity: 0.7;
+	shape-rendering: crispEdges;
+}
+
+.grid path {
+	stroke-width: 0;
+}
+
+text{
+	font-size:10pt;
+}
+
+.area{
+	stroke:gold;
+	stroke-width:2;
+	fill:#82CAFF;
+	fill-opacity:0.4;
+}
+
+.axis line,
+.axis path{
+	fill:none;
+	stroke:gray;
+	stroke-width:2px;
+	shape-rendering:crispEdges;
+}
+
+div.tooltip {	
+    position: absolute;			
+    text-align: center;			
+    min-width: 60px;					
+	max-width: 300px;
+    min-height: 30px;					
+	max-height: 150px;
+    padding: 8px;				
+    font: 12px sans-serif;		
+    background: lightsteelblue;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;		
+	transform:translateX(10px);	
+	opacity:0.4;
+}
+
+</style>
+<body>
+<div id="chart"></div>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+var data_ = [{Amt:"$10",Num:"10"},
+			{Amt:"$20",Num:"20"},
+			{Amt:"$30",Num:"30"},
+			{Amt:"$40",Num:"40"},
+			{Amt:"$50",Num:"50"},
+			{Amt:"$55",Num:"60"},
+			{Amt:"$60",Num:"50"},
+			{Amt:"$70",Num:"40"},
+			{Amt:"$80",Num:"30"},
+			{Amt:"$90",Num:"20"},
+			{Amt:"$100",Num:"10"}
+]
+
+var data = [{Amt:"$10",Num:0.003538419
+},{Amt:"$11",Num:0.003771467
+},{Amt:"$12",Num:0.004014106
+},{Amt:"$13",Num:0.004266236
+},{Amt:"$14",Num:0.004527709
+},{Amt:"$15",Num:0.004798324
+},{Amt:"$16",Num:0.00507783
+},{Amt:"$17",Num:0.00536592
+},{Amt:"$18",Num:0.005662234
+},{Amt:"$19",Num:0.005966352
+},{Amt:"$20",Num:0.0062778
+},{Amt:"$21",Num:0.006596045
+},{Amt:"$22",Num:0.006920495
+},{Amt:"$23",Num:0.007250506
+},{Amt:"$24",Num:0.007585372
+},{Amt:"$25",Num:0.007924339
+},{Amt:"$26",Num:0.008266595
+},{Amt:"$27",Num:0.008611281
+},{Amt:"$28",Num:0.008957492
+},{Amt:"$29",Num:0.009304275
+},{Amt:"$30",Num:0.009650641
+},{Amt:"$31",Num:0.009995564
+},{Amt:"$32",Num:0.010337987
+},{Amt:"$33",Num:0.010676825
+},{Amt:"$34",Num:0.011010975
+},{Amt:"$35",Num:0.011339318
+},{Amt:"$36",Num:0.011660727
+},{Amt:"$37",Num:0.01197407
+},{Amt:"$38",Num:0.012278221
+},{Amt:"$39",Num:0.012572065
+},{Amt:"$40",Num:0.012854504
+},{Amt:"$41",Num:0.013124462
+},{Amt:"$42",Num:0.013380896
+},{Amt:"$43",Num:0.0136228
+},{Amt:"$44",Num:0.013849213
+},{Amt:"$45",Num:0.014059222
+},{Amt:"$46",Num:0.014251973
+},{Amt:"$47",Num:0.014426674
+},{Amt:"$48",Num:0.014582599
+},{Amt:"$49",Num:0.014719097
+},{Amt:"$50",Num:0.014835592
+},{Amt:"$51",Num:0.014931592
+},{Amt:"$52",Num:0.015006688
+},{Amt:"$53",Num:0.015060559
+},{Amt:"$54",Num:0.015092974
+},{Amt:"$55",Num:0.015103795
+},{Amt:"$56",Num:0.015092974
+},{Amt:"$57",Num:0.015060559
+},{Amt:"$58",Num:0.015006688
+},{Amt:"$59",Num:0.014931592
+},{Amt:"$60",Num:0.014835592
+},{Amt:"$61",Num:0.014719097
+},{Amt:"$62",Num:0.014582599
+},{Amt:"$63",Num:0.014426674
+},{Amt:"$64",Num:0.014251973
+},{Amt:"$65",Num:0.014059222
+},{Amt:"$66",Num:0.013849213
+},{Amt:"$67",Num:0.0136228
+},{Amt:"$68",Num:0.013380896
+},{Amt:"$69",Num:0.013124462
+},{Amt:"$70",Num:0.012854504
+},{Amt:"$71",Num:0.012572065
+},{Amt:"$72",Num:0.012278221
+},{Amt:"$73",Num:0.01197407
+},{Amt:"$74",Num:0.011660727
+},{Amt:"$75",Num:0.011339318
+},{Amt:"$76",Num:0.011010975
+},{Amt:"$77",Num:0.010676825
+},{Amt:"$78",Num:0.010337987
+},{Amt:"$79",Num:0.009995564
+},{Amt:"$80",Num:0.009650641
+},{Amt:"$81",Num:0.009304275
+},{Amt:"$82",Num:0.008957492
+},{Amt:"$83",Num:0.008611281
+},{Amt:"$84",Num:0.008266595
+},{Amt:"$85",Num:0.007924339
+},{Amt:"$86",Num:0.007585372
+},{Amt:"$87",Num:0.007250506
+},{Amt:"$88",Num:0.006920495
+},{Amt:"$89",Num:0.006596045
+},{Amt:"$90",Num:0.0062778
+},{Amt:"$91",Num:0.005966352
+},{Amt:"$92",Num:0.005662234
+},{Amt:"$93",Num:0.00536592
+},{Amt:"$94",Num:0.00507783
+},{Amt:"$95",Num:0.004798324
+},{Amt:"$96",Num:0.004527709
+},{Amt:"$97",Num:0.004266236
+},{Amt:"$98",Num:0.004014106
+},{Amt:"$99",Num:0.003771467
+},{Amt:"$100",Num:0.003538419
+}]
+
+//init
+drawChart(data);
+
+function drawChart(data){
+var margin = {top:30, left:40, bottom:30, right:20};
+var width = 1000 - margin.left - margin.right;
+var height = 480 - margin.top - margin.bottom;
+
+var canvas = d3.select("#chart").append("svg")
+				.attr("class","canvas")
+				.attr("width", width + margin.left + margin.right)
+				.attr("height", height + margin.top + margin.bottom)
+				.append("g")
+				.attr("transform","translate("+ margin.left +","+ margin.top +")");
+
+var parseDate = d3.time.format("%d-%b-%y").parse;
+
+var div = d3.select("#chart").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
+
+var x = d3.scale.linear().range([0,width]);
+var y = d3.scale.linear().range([height,0]);
+
+var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(4).tickFormat(function(d) { return "$" + d; });
+var yAxis = d3.svg.axis().scale(y).orient("left").ticks(5);
+
+//Generating X Axis
+function make_x_axis(){
+	return d3.svg.axis()
+						.scale(x)
+						.orient("bottom")
+						.ticks(5)
+}
+
+//Generating Y Axis
+function make_y_axis(){
+	return d3.svg.axis()
+						.scale(y)
+						.orient("left")
+						.ticks(5)
+}
+
+//preset Data
+data.forEach(function(d){
+	d.Amt = +(d.Amt).substring(1);
+	d.Cnt = +d.Num*1000;
+	d.x = +d.Amt;
+	d.y = +d.Cnt;
+})
+
+//Counting total from one of the Dimension
+var totalTrx = d3.sum(data,function(d){return +d.Cnt});
+
+//One of the Path function (generating canvas to fill in color)
+var area = d3.svg.area()
+			.interpolate("cardinal")
+			.x(function(d){return x(d.x);})
+			.y0(height)
+			.y1(function(d){return y(d.y);})
+
+//Setting ticks value for X and Y			
+x.domain(d3.extent(data, function(d){return d.Amt;}))
+y.domain([0,d3.max(data, function(d){return d.Cnt;})])
+
+//Generating path for below the line.
+canvas.append("path")
+		.datum(data)
+		.attr("class","area")
+		.attr("d",area)
+		.on("mouseover", function(d) {
+            div.transition()		
+                .duration(200)		
+				.style("fill","white")
+                .style("opacity", .9);		
+            div	.html("<div style='text-align:center; font-weight:bold; font-size:15px;'>Summary</div><hr> "
+						+" Total Amount : $"+ d3.sum(data, function(d){return d.Amt}) 
+						+"<br/> Number Transaction : "  + Math.floor(d3.sum(data, function(d){return d.Cnt}))
+						+"<hr> Average Transaction Amount : $" +d3.mean(data, function(d) { return d.Amt; })
+						+"<br/> Average Number of Transaction : " +d3.format(".2f")(d3.mean(data, function(d) { return d.Cnt; }))
+					)	
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 28) + "px");	
+            })					
+        .on("mouseout", function(d) {		
+            div.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+        });;
+/*		
+//Appending Horizontal Grid
+canvas.append("g")
+		.attr("class","grid")
+		.attr("transform","translate(0,"+ height +")")
+		.call(make_x_axis()
+				.tickSize(-height,0,0)
+				.tickFormat("")
+		)
+		.style("stroke-dasharray", ("3, 3"))		
+
+//Appending vertical grid		
+canvas.append("g")
+		.attr("class","grid")
+		.call(make_y_axis()
+				.tickSize(-width,0,0)
+				.tickFormat("")
+		)
+		.style("stroke-dasharray", ("3, 3"))
+*/
+
+//Appending X Axis (line)
+canvas.append("g")
+	.attr("class","x axis")
+	.attr("transform","translate(0,"+ height +")")
+	.call(xAxis);
+
+//Set Label for X Axis	
+canvas.append("text")
+	.attr("transform","translate("+ width/2 +","+ (height+margin.bottom) +")")
+	.attr("text-anchor","middle")
+	.text("X Axis");
+
+//Appending YAxis (line)	
+canvas.append("g")
+	.attr("class","y axis")
+	.call(yAxis);
+
+//Set Label for Y Axis	
+canvas.append("text")
+	.attr("transform","rotate(-90)")
+	.attr("y",0-margin.left)
+	.attr("x",0-(height/2))
+	.attr("dy","1em")
+	.style("text-anchor","middle")
+	.text("Y Axis");
+
+//Set the title at the top of the Chart	
+canvas.append("text")
+		.attr("x",width/2)
+		.attr("y",0-(margin.top/2))
+		.attr("text-anchor","middle")
+		.style("font-size","16px")
+		.style("text-decoration","underline")
+		.text("X vs Y Graph");
+		
+/*
+- Dot
+Below is plotting every dot for the Line.
+Every dot got mouse event Hover-in, Hover-out, and Click
+Hover in and out : Tooltip
+Click to trigger generation of path (Area) below the dot. There are 2 areas (Below and Above)
+
+- Area
+Inside each area also got mouse event Hover-in, Hover-out, Click
+Hover in and out : Tooltip and set the opacity of the area (Calculation of percentage and Total are inside here.)
+Click : Remove the area and back to the first view.
+
+- Canvas
+For the Canvas got MouseDown event. This event is to remove the area generated.
+
+*/		
+		
+//Generating Dots		
+var dots = canvas.selectAll(".dot")
+	.data(data)
+	.enter().append("circle").attr("r", 5)
+	.attr("cx",function(d){return x(d.Amt);})
+	.attr("cy",function(d){return y(d.Cnt);})
+	.attr("fill","orange")
+	.style("opacity","0.3")
+	.on("mouseover", function(d) {		
+            div.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            div.html("Amount : $"+ d.Amt + "<br/>"
+					+"Number of Transaction : "  + Math.floor(d.Cnt)
+					)
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 28) + "px");	
+            })					
+        .on("mouseout", function(d) {		
+            div.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+        });
+
+//Dot mouse click event
+dots.on("click",function(d){
+			clicked = +d.Amt;
+			filteringBelow = data.filter(function(d) { 
+				if( d["x"]<=clicked){ return d; }
+			});
+			filteringBelowCounter = data.filter(function(d) { 
+				if( d["x"]<clicked){ return d; }
+			});
+			filteringAbove = data.filter(function(d){
+				if(d["x"]>=clicked){return d;}
+			})
+			
+			dots.filter(function(d) { return d.Amt <= clicked }).style("fill", "red");
+			
+			Below = canvas.append("path")
+			.datum(filteringBelow)
+			.attr("id","filteredAreaBelow")
+			.attr("d",area)
+			.style("fill","#DDDDDD")
+			.on("mouseover", function(d) { 
+			Above.style("opacity",0.1)
+            div.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            div	.html("<div style='font-size:15px; font-weight:bold;'>"+d3.format(".2f")(d3.sum(filteringBelowCounter, function(d){return d.Cnt})/+totalTrx)*100+"%</div><hr>"
+						+" Total Amount : $" + d3.sum(filteringBelow, function(d){return d.Amt}) + "<br/>"  
+						+"Total Number of Transaction : " + d3.format(".0f")(d3.sum(filteringBelow, function(d){return d.Cnt}))
+						+"<hr> Average Transaction Amount : $" +d3.mean(filteringBelow, function(d) { return d.Amt; })
+						+"<br/> Average Number of Transaction : " +d3.format(".2f")(d3.mean(filteringBelow, function(d) { return d.Cnt; }))
+				)
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 28) + "px");	
+            })					
+			.on("mouseout", function(d) {		
+				Above.style("opacity",1)
+				div.transition()		
+					.duration(500)		
+					.style("opacity", 0);	
+			});
+			
+			Above = canvas.append("path")
+			.datum(filteringAbove)
+			.attr("id","filteredAreaAbove")
+			.attr("d",area)
+			.style("fill","#D0D0D0")
+			.on("mouseover", function(d) { 
+			Below.style("opacity",0.1)
+            div.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            div	.html("<div style='font-size:15px; font-weight:bold;'>"+d3.format(".2f")(d3.sum(filteringAbove, function(d){return d.Cnt})/+totalTrx)*100+"%</div><hr>"
+						+" Total Amount : $" + d3.sum(filteringAbove, function(d){return d.Amt}) + "<br/>"  
+						+"Total Number of Transaction : " + d3.format(".0f")(d3.sum(filteringAbove, function(d){return d.Cnt}))
+						+"<hr> Average Transaction Amount : $" +d3.mean(filteringAbove, function(d) { return d.Amt; })
+						+"<br/> Average Number of Transaction : " +d3.format(".2f")(d3.mean(filteringAbove, function(d) { return d.Cnt; }))
+				)
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 28) + "px");	
+            })					
+			.on("mouseout", function(d) {		
+				Below.style("opacity",1)
+				div.transition()		
+					.duration(500)		
+					.style("opacity", 0);	
+			});
+		});
+
+//Canvas mousedown event
+canvas.on("mousedown",function(d){
+			dots.style("fill", "orange");
+			if(document.getElementById("filteredAreaBelow")&&document.getElementById("filteredAreaAbove")){
+				document.getElementById("filteredAreaBelow").remove();
+				document.getElementById("filteredAreaAbove").remove();
+			}
+		})		
+};
+</script>
+</body>
